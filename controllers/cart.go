@@ -4,7 +4,7 @@ import (
 
 )
 
-func AddToCart() gin.HandlerFunc {
+func AddProductToCart() gin.HandlerFunc {
 
 }
 
