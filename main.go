@@ -1,8 +1,11 @@
 package main
 
 import (
+	"os"
+	"log"
+
 	"github.com/hmuir28/go-ecommerce/controllers"
-	"github.com/hmuir28/go-ecommerce/middleware"
+	// "github.com/hmuir28/go-ecommerce/middleware"
 	"github.com/hmuir28/go-ecommerce/routes"
 	"github.com/hmuir28/go-ecommerce/database"
 
@@ -23,12 +26,12 @@ func main() {
 	router.Use(gin.Logger())
 
 	routes.UserRoutes(router)
-	router.Use(middleware.Authentication())
+	// router.Use(middleware.Authentication())
 
-	router.Get("/addtocart", app.AddToCart())
-	router.Get("/removeitem", app.RemoveItem())
-	router.Get("/cartcheckout", app.BuyFromCart())
-	router.Get("/instantbuy", app.InstantBuy())
+	router.GET("/addtocart", app.AddProductToCart())
+	router.GET("/removeitem", app.RemoveItem())
+	router.GET("/cartcheckout", app.BuyItemFromCart())
+	router.GET("/instantbuy", app.InstantBuyer())
 
 	log.Fatal(router.Run(":" + port))
 }

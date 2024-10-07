@@ -4,6 +4,7 @@ import (
 	"log"
 	"time"
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"go.mongodb.org/mongo-driver/bson"
@@ -98,7 +99,7 @@ func SignUp() gin.HandlerFunc {
 		token, refreshtoken, _ := generate.GenerateToken(*user.Email, *user.First_Name, *user.Last_Name, user.User_ID)
 		user.Token = &token
 		user.Refresh_Token = &refreshtoken
-		user.UserCart = make([]models.ProductUser, 0)
+		user.User_Cart = make([]models.ProductUser, 0)
 		user.Address_Details = make([]models.Address, 0)
 		user.Order_Status = make([]models.Order, 0)
 
@@ -122,14 +123,16 @@ func Login() gin.HandlerFunc {
 
 		defer cancel()
 
-		var foundUser models.User
+		var user models.User
 
 		if err := c.BindJSON(&user); err != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": err})
 			return
 		}
 
-		err := UserCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&foundUser)
+		var foundUser models.User
+
+		err := userCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&foundUser)
 
 		defer cancel()
 
@@ -148,7 +151,7 @@ func Login() gin.HandlerFunc {
 			return
 		}
 
-		token, refreshtoken, _ := generate.TokenGenerator(*foundUser.Email, *foundUser.First_Name, *foundUser.Last_Name, foundUser.User_ID)
+		token, refreshtoken, _ := generate.GenerateToken(*foundUser.Email, *foundUser.First_Name, *foundUser.Last_Name, foundUser.User_ID)
 
 		defer cancel()
 
@@ -159,13 +162,13 @@ func Login() gin.HandlerFunc {
 }
 
 func ProductViewerAdmin() gin.HandlerFunc {
-
+	return func (c *gin.Context) {}
 }
 
 func SearchProduct() gin.HandlerFunc {
-	
+	return func (c *gin.Context) {}
 }
 
 func SearchProductByQuery() gin.HandlerFunc {
-	
+	return func (c *gin.Context) {}
 }
