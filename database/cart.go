@@ -1,7 +1,10 @@
 package database
 
 import (
-
+	"context"
+	"errors"
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 var (
@@ -14,22 +17,22 @@ var (
 	ErrCantBuyCartItem = errors.New("cannot update the purchase")
 )
 
-func AddProductToCart() gin.HandlerFunc {
+func AddProductToCart(c context.Context, prodCollection *mongo.Collection, userCollection *mongo.Collection, productID primitive.ObjectID, userID string) error {
+	return nil
+}
+
+func RemoveCartItem(c context.Context, prodCollection *mongo.Collection, userCollection *mongo.Collection, productID primitive.ObjectID, userID string) error {
+	return nil
+}
+
+func GetItemFromCart() {
 
 }
 
-func RemoveCartItem() gin.HandlerFunc {
-
+func BuyItemFromCart(c context.Context, userCollection *mongo.Collection, userID string) error {
+	return nil
 }
 
-func GetItemFromCart() gin.HandlerFunc {
-
-}
-
-func BuyItemFromCart() gin.HandlerFunc {
-
-}
-
-func InstantBuyer() gin.HandlerFunc {
-	
+func InstantBuyer(c context.Context, prodCollection *mongo.Collection, userCollection *mongo.Collection, productID primitive.ObjectID, userID string) error {
+	return nil
 }

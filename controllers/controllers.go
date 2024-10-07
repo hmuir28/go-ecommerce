@@ -1,15 +1,23 @@
 package controllers
 
 import (
-
+	"log"
+	"time"
+	"context"
+	"github.com/gin-gonic/gin"
+	"net/http"
+	"go.mongodb.org/mongo-driver/bson"
+	"github.com/go-playground/validator/v10"
+	
+	"github.com/hmuir28/go-ecommerce/models"
 )
 
 func HashPassword(password string) string {
-
+	return ""
 }
 
 func VerifyPassword(userPassword string, givenPassword string) (bool, string) {
-	
+	return true, ""
 }
 
 func SignUp() gin.HandlerFunc {
@@ -25,7 +33,9 @@ func SignUp() gin.HandlerFunc {
 			return
 		}
 
-		validationErr := Validate.Struct(user)
+		validate := validator.New()
+
+		validationErr := validate.Struct(user)
 
 		if validationErr != nil {
 			c.JSON(http.StatusBadRequest, gin.H{"error": validationErr})

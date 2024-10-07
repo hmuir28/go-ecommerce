@@ -4,18 +4,18 @@ import (
 
 )
 
-func AddAddress() gin.HandlerFunc {
+func AddAddress() {
 
 }
 
-func EditHomeAddress() gin.HandlerFunc {
+func EditHomeAddress() {
 
 }
 
-func EditWorkAddress() gin.HandlerFunc {
+func EditWorkAddress() {
 
 }
 
-func DeleteAddress() gin.HandlerFunc {
+func DeleteAddress() {
 
 }

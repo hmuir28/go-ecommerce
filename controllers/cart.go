@@ -10,6 +10,8 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
+
+	"github.com/hmuir28/go-ecommerce/database"
 )
 
 type Application struct {
@@ -20,7 +22,7 @@ type Application struct {
 func NewApplication(prodCollection, userCollection *mongo.Collection) *Application {
 	return &Application{
 		prodCollection: prodCollection,
-		userCollection: userCollection
+		userCollection: userCollection,
 	}
 }
 
@@ -46,11 +48,11 @@ func (app *Application) AddProductToCart() gin.HandlerFunc {
 
 		if err != nil {
 			log.Println(err)
-			c.AbortWithStatus(http.StatusInternalServer)
+			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
 
-		var ctx, cancel = context.WithTimeOut(context.Background(), 5 * time.Second)
+		var ctx, cancel = context.WithTimeout(context.Background(), 5 * time.Second)
 
 		defer cancel()
 
@@ -86,11 +88,11 @@ func (app *Application) RemoveItem() gin.HandlerFunc {
 
 		if err != nil {
 			log.Println(err)
-			c.AbortWithStatus(http.StatusInternalServer)
+			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
 
-		var ctx, cancel = context.WithTimeOut(context.Background(), 5 * time.Second)
+		var ctx, cancel = context.WithTimeout(context.Background(), 5 * time.Second)
 
 		defer cancel()
 
@@ -104,7 +106,7 @@ func (app *Application) RemoveItem() gin.HandlerFunc {
 	}
 }
 
-func GetItemFromCart() gin.HandlerFunc {
+func GetItemFromCart() {
 
 }
 
@@ -118,7 +120,7 @@ func (app *Application) BuyItemFromCart() gin.HandlerFunc {
 			_ = c.AbortWithError(http.StatusBadRequest, errors.New("User ID is empty"))
 		}
 	
-		var ctx, cancel = context.WithTimeOut(context.Background(), 100 * time.Second)
+		var ctx, cancel = context.WithTimeout(context.Background(), 100 * time.Second)
 
 		defer cancel()
 
@@ -128,7 +130,7 @@ func (app *Application) BuyItemFromCart() gin.HandlerFunc {
 			c.IndentedJSON(http.StatusInternalServerError, err)
 		}
 
-		c.IndentedJSON("Successfully placed the order")
+		c.IndentedJSON(200, "Successfully placed the order")
 	}
 }
 
@@ -154,11 +156,11 @@ func (app *Application) InstantBuy() gin.HandlerFunc {
 
 		if err != nil {
 			log.Println(err)
-			c.AbortWithStatus(http.StatusInternalServer)
+			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
 
-		var ctx, cancel = context.WithTimeOut(context.Background(), 5 * time.Second)
+		var ctx, cancel = context.WithTimeout(context.Background(), 5 * time.Second)
 
 		defer cancel()
 
