@@ -10,7 +10,6 @@ import (
 )
 
 func DBSet() *mongo.Client {
-
 	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
 
 	if err != nil {
