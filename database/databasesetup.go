@@ -2,21 +2,31 @@ package database
 
 import (
 	"context"
+	"fmt"
 	"log"
 	"time"
-	"fmt"
+
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 func DBSet() *mongo.Client {
-	client, err := mongo.NewClient(options.Client().ApplyURI("mongodb://localhost:27017"))
+	// username := os.Getenv("MONGO_USERNAME")
+	// password := os.Getenv("MONGO_PASSWORD")
+	// database := os.Getenv("MONGO_DB")
+	username := "admin"
+	password := "mongo"
+	database := "Ecommerce"
+
+	uri := fmt.Sprintf("mongodb://%s:%s@localhost:27017/%s?authSource=admin", username, password, database)
+
+	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	ctx, cancel := context.WithTimeout(context.Background(), 10 * time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 
 	defer cancel()
 

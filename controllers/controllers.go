@@ -1,19 +1,20 @@
 package controllers
 
 import (
-	"log"
-	"time"
 	"context"
 	"fmt"
-	"github.com/gin-gonic/gin"
+	"log"
 	"net/http"
+	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"github.com/go-playground/validator/v10"
 	"golang.org/x/crypto/bcrypt"
-	
-	"github.com/hmuir28/go-ecommerce/models"
+
 	"github.com/hmuir28/go-ecommerce/database"
+	"github.com/hmuir28/go-ecommerce/models"
 	generate "github.com/hmuir28/go-ecommerce/tokens"
 )
 
@@ -43,7 +44,8 @@ func VerifyPassword(userPassword string, givenPassword string) (bool, string) {
 
 func SignUp() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var ctx, cancel = context.WithTimeout(context.Background(), 100 * time.Second)
+
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 
 		defer cancel()
 
@@ -95,7 +97,7 @@ func SignUp() gin.HandlerFunc {
 		user.Updated_At, _ = time.Parse(time.RFC3339, time.Now().Format(time.RFC3339))
 		user.ID = primitive.NewObjectID()
 		user.User_ID = user.ID.Hex()
-		
+
 		token, refreshtoken, _ := generate.GenerateToken(*user.Email, *user.First_Name, *user.Last_Name, user.User_ID)
 		user.Token = &token
 		user.Refresh_Token = &refreshtoken
@@ -118,8 +120,8 @@ func SignUp() gin.HandlerFunc {
 
 func Login() gin.HandlerFunc {
 	return func(c *gin.Context) {
-	
-		var ctx, cancel = context.WithTimeout(context.Background(), 100 *time.Second)
+
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
 
 		defer cancel()
 
@@ -141,7 +143,7 @@ func Login() gin.HandlerFunc {
 			return
 		}
 
-		PasswordIsValid, msg := VerifyPassword(*user.Password, *foundUser.Password)
+		PasswordIsValid, msg := VerifyPassword(*foundUser.Password, *user.Password)
 
 		defer cancel()
 
@@ -162,13 +164,13 @@ func Login() gin.HandlerFunc {
 }
 
 func ProductViewerAdmin() gin.HandlerFunc {
-	return func (c *gin.Context) {}
+	return func(c *gin.Context) {}
 }
 
 func SearchProduct() gin.HandlerFunc {
-	return func (c *gin.Context) {}
+	return func(c *gin.Context) {}
 }
 
 func SearchProductByQuery() gin.HandlerFunc {
-	return func (c *gin.Context) {}
+	return func(c *gin.Context) {}
 }
