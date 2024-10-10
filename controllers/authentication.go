@@ -9,18 +9,14 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
-	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"golang.org/x/crypto/bcrypt"
-
 	"github.com/hmuir28/go-ecommerce/database"
 	"github.com/hmuir28/go-ecommerce/models"
 	generate "github.com/hmuir28/go-ecommerce/tokens"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var validate = validator.New()
-var userCollection = database.UserData(database.Client, "users")
-var prodCollection = database.ProductData(database.Client, "products")
 
 func HashPassword(password string) (string, error) {
 	hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
@@ -63,7 +59,7 @@ func SignUp() gin.HandlerFunc {
 			return
 		}
 
-		count, err := userCollection.CountDocuments(ctx, bson.M{"email": user.Email})
+		count, err := database.CountUserDocumentsByKeyValue(ctx, "email", *user.Email)
 
 		if err != nil {
 			log.Panic(err)
@@ -75,7 +71,7 @@ func SignUp() gin.HandlerFunc {
 			c.JSON(http.StatusBadRequest, gin.H{"error": "user already exists"})
 		}
 
-		count, err = userCollection.CountDocuments(ctx, bson.M{"phone": user.Phone})
+		count, err = database.CountUserDocumentsByKeyValue(ctx, "phone", *user.Phone)
 
 		defer cancel()
 
@@ -105,7 +101,7 @@ func SignUp() gin.HandlerFunc {
 		user.Address_Details = make([]models.Address, 0)
 		user.Order_Status = make([]models.Order, 0)
 
-		_, insertErr := userCollection.InsertOne(ctx, user)
+		insertErr := database.CreateUser(ctx, user)
 
 		if insertErr != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": "the user did not get created"})
@@ -134,7 +130,7 @@ func Login() gin.HandlerFunc {
 
 		var foundUser models.User
 
-		err := userCollection.FindOne(ctx, bson.M{"email": user.Email}).Decode(&foundUser)
+		err := database.FindUserByEmail(ctx, &foundUser, *user.Email)
 
 		defer cancel()
 
@@ -161,16 +157,4 @@ func Login() gin.HandlerFunc {
 
 		c.JSON(http.StatusFound, foundUser)
 	}
-}
-
-func ProductViewerAdmin() gin.HandlerFunc {
-	return func(c *gin.Context) {}
-}
-
-func SearchProduct() gin.HandlerFunc {
-	return func(c *gin.Context) {}
-}
-
-func SearchProductByQuery() gin.HandlerFunc {
-	return func(c *gin.Context) {}
 }
