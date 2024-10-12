@@ -36,3 +36,7 @@ func FindProductByID(ctx context.Context, product *models.Product, id primitive.
 func FindProductByName(ctx context.Context, nameQueryParam string) (cur *mongo.Cursor, err error) {
 	return prodCollection.Find(ctx, bson.M{"product_name": bson.M{"$regex": nameQueryParam}})
 }
+
+func UpdateProduct(ctx context.Context, filter interface{}, update interface{}) (*mongo.UpdateResult, error) {
+	return prodCollection.UpdateOne(ctx, filter, update)
+}

@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
@@ -14,8 +15,12 @@ func RemoveCartItem(c context.Context, prodCollection *mongo.Collection, userCol
 	return nil
 }
 
-func GetItemFromCart() {
-
+func FindProductFromCart(ctx context.Context, filteredMatch bson.D, unwind bson.D, grouping bson.D) (cur *mongo.Cursor, err error) {
+	return userCollection.Aggregate(ctx, mongo.Pipeline{
+		filteredMatch,
+		unwind,
+		grouping,
+	})
 }
 
 func BuyItemFromCart(c context.Context, userCollection *mongo.Collection, userID string) error {
