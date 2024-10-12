@@ -3,6 +3,7 @@ package database
 import (
 	"context"
 	"errors"
+	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/bson"
 
@@ -24,7 +25,11 @@ func CreateProduct(ctx context.Context, product models.Product) error {
 	return insertErr
 }
 
+func FindProducts(ctx context.Context) (cur *mongo.Cursor, err error) {
+	return prodCollection.Find(ctx, bson.D{{}})
+}
+
+
 func FindProductByID(ctx context.Context, product *models.Product, id primitive.ObjectID) error {
 	return prodCollection.FindOne(ctx, bson.M{"_id": id}).Decode(&product)
 }
-

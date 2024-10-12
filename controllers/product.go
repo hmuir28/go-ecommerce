@@ -43,6 +43,46 @@ func ProductViewerAdmin() gin.HandlerFunc {
 	return func(c *gin.Context) {}
 }
 
+func FindProducts() gin.HandlerFunc {
+	return func(c *gin.Context) {
+
+		var ctx, cancel = context.WithTimeout(context.Background(), 100*time.Second)
+
+		defer cancel()
+
+		cursor, err := database.FindProducts(ctx)
+
+		defer cancel()
+
+		if err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": "Something went wrong!"})
+			return
+		}
+
+		var productList []models.Product
+
+		err = cursor.All(ctx, &productList)
+
+		if err != nil {
+			log.Println(err)
+			c.AbortWithStatus(http.StatusInternalServerError)
+			return
+		}
+
+		defer cursor.Close(ctx)
+
+		if err := cursor.Err(); err != nil {
+			log.Println(err)
+			c.IndentedJSON(400, "invalid")
+			return
+		}
+
+		defer cancel()
+
+		c.JSON(http.StatusFound, productList)
+	}
+}
+
 func FindProductById() gin.HandlerFunc {
 	return func(c *gin.Context) {
 

@@ -7,6 +7,7 @@ import (
 
 func ProductRoutes(incomingRoutes *gin.Engine) {
 	incomingRoutes.POST("/products", controllers.CreateProduct())
+	incomingRoutes.GET("/products", controllers.FindProducts())
 	incomingRoutes.GET("/products/:id", controllers.FindProductById())
 	incomingRoutes.GET("/products/search", controllers.FindProductByQuery())
 }
