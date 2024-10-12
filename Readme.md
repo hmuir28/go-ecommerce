@@ -1,5 +1,6 @@
-“E-commerce API Documentation ----------------------------”
-“This API provides functionality for user management, product management, and shopping cart operations. Below are the available endpoints and instructions on how to run the app locally.”
+E-commerce API Documentation
+----------------------------
+This API provides functionality for user management, product management, and shopping cart operations. Below are the available endpoints and instructions on how to run the app locally.
 
 ### **API Endpoints**”
 
