@@ -120,5 +120,47 @@ func FindProductById() gin.HandlerFunc {
 }
 
 func FindProductByQuery() gin.HandlerFunc {
-	return func(c *gin.Context) {}
+	return func(c *gin.Context) {
+		var productList []models.Product
+		queryParam := c.Query("name")
+
+		if queryParam == "" {
+			log.Println("query is empty")
+			c.Header("Content-Type", "application/json")
+			c.JSON(http.StatusNotFound, gin.H{"Error": "Invalid search index"})
+			c.Abort()
+			return
+		}
+		
+		var ctx, cancel = context.WithTimeout(context.Background(), 100 * time.Second)
+
+		defer cancel()
+
+		cursor, err := database.FindProductByName(ctx, queryParam)
+
+		if err != nil {
+			c.IndentedJSON(404, "something went wrong while fetching data")
+			return
+		}
+
+		err = cursor.All(ctx, &productList)
+
+		if err != nil {
+			log.Println(err)
+			c.IndentedJSON(400, "invalid")
+			return
+		}
+
+		defer cursor.Close(ctx)
+
+		if err := cursor.Err(); err != nil {
+			log.Println(err)
+			c.IndentedJSON(400, "invalid")
+			return
+		}
+
+		defer cancel()
+
+		c.JSON(http.StatusFound, productList)
+	}
 }

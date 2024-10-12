@@ -29,7 +29,10 @@ func FindProducts(ctx context.Context) (cur *mongo.Cursor, err error) {
 	return prodCollection.Find(ctx, bson.D{{}})
 }
 
-
 func FindProductByID(ctx context.Context, product *models.Product, id primitive.ObjectID) error {
 	return prodCollection.FindOne(ctx, bson.M{"_id": id}).Decode(&product)
+}
+
+func FindProductByName(ctx context.Context, nameQueryParam string) (cur *mongo.Cursor, err error) {
+	return prodCollection.Find(ctx, bson.M{"product_name": bson.M{"$regex": nameQueryParam}})
 }
