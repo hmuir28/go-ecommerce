@@ -26,6 +26,7 @@ func main() {
 	router.Use(gin.Logger())
 
 	routes.UserRoutes(router)
+	routes.ProductRoutes(router)
 	// router.Use(middleware.Authentication())
 
 	router.GET("/addtocart", app.AddProductToCart())

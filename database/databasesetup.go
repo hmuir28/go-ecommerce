@@ -10,6 +10,10 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
+var userCollection = UserData(Client, "users")
+var prodCollection = ProductData(Client, "products")
+var Client *mongo.Client = DBSet()
+
 func DBSet() *mongo.Client {
 	// username := os.Getenv("MONGO_USERNAME")
 	// password := os.Getenv("MONGO_PASSWORD")
@@ -40,8 +44,6 @@ func DBSet() *mongo.Client {
 	fmt.Println("Successfully connected to mongodb")
 	return client
 }
-
-var Client *mongo.Client = DBSet()
 
 func UserData(client *mongo.Client, collectionName string) *mongo.Collection {
 	var userCollection *mongo.Collection = client.Database("Ecommerce").Collection(collectionName)

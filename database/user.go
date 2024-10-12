@@ -7,9 +7,6 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-var userCollection = UserData(Client, "users")
-var prodCollection = ProductData(Client, "products")
-
 func CountUserDocumentsByKeyValue(ctx context.Context, key, value string) (int64, error) {
 	return userCollection.CountDocuments(ctx, bson.M{key: value})
 }
